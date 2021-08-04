@@ -64,7 +64,79 @@ function App() {
           </div>
         </div>
 
-        <ul className="list-group mt-4">
+        <div className="row g-3 mt-3">
+          <div className="col-sm-6">
+            <input type="text" className="form-control" placeholder="Enter to search" />
+          </div>
+          <div className="col-sm-3">
+            <select className="form-select">
+              <option value="">Filter Month</option>
+              <option value="">Jan</option>
+              <option value="">Feb</option>
+              <option value="">Mar</option>
+              <option value="">Apr</option>
+              <option value="">May</option>
+              <option value="">Jun</option>
+              <option value="">Jul</option>
+              <option value="">Aug</option>
+              <option value="">Sep</option>
+              <option value="">Oct</option>
+              <option value="">Nov</option>
+              <option value="">Dec</option>
+            </select>
+          </div>
+          <div className="col-sm-3">
+            <select className="form-select">
+              <option value="">Filter Year</option>
+              <option value="">2021</option>
+              <option value="">2020</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-4 d-flex justify-content-between">
+          <div className="row">
+            <div className="col-12">
+              <select type="text" className="form-select form-select-sm">
+                <option value="">10</option>
+                <option value="">25</option>
+                <option value="">50</option>
+                <option value="">100</option>
+              </select>
+            </div>
+          </div>
+          <nav>
+            <ul className="pagination pagination-sm">
+              <li className="page-item disabled">
+                <a href="/" className="page-link">
+                  <span>&laquo;</span>
+                </a>
+              </li>
+              <li className="page-item active">
+                <a href="/" className="page-link">
+                  <span>1</span>
+                </a>
+              </li>
+              <li className="page-item">
+                <a href="/" className="page-link">
+                  <span>2</span>
+                </a>
+              </li>
+              <li className="page-item">
+                <a href="/" className="page-link">
+                  <span>3</span>
+                </a>
+              </li>
+              <li className="page-item">
+                <a href="/" className="page-link">
+                  <span>&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <ul className="list-group">
           <li className="list-group-item d-flex justify-content-between align-items-center bd-callout bd-callout-danger">
             <div className="transaction-detail d-flex flex-fill me-4">
               <div className="transaction-date-card border border-1 border-dark rounded-2 bg-warning p-2 text-center">
