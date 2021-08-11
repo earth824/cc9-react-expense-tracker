@@ -9,10 +9,19 @@ import TransactionForm from './components/TransactionForm';
 
 function App() {
   const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
+
+  const addTransaction = newTransaction => {
+    // setTransactions([newTransaction, ...transactions]);
+
+    const cloneTransactions = [...transactions];
+    cloneTransactions.unshift(newTransaction);
+    setTransactions(cloneTransactions);
+  };
+
   return (
     <div className="container">
       <div className="content">
-        <TransactionForm />
+        <TransactionForm addTransaction={addTransaction} />
         <Summary />
         <Searchbar />
         <Pagination />
