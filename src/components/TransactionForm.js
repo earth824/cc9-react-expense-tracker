@@ -28,7 +28,7 @@ const validateDate = value => {
   return '';
 };
 
-function TransactionForm({ addTransaction }) {
+function TransactionForm({ addTransaction, closeAddForm }) {
   const [type, setType] = useState('Expense');
   const [category, setCategory] = useState(EXPENSES[0].id);
   const [payee, setPayee] = useState('');
@@ -128,30 +128,33 @@ function TransactionForm({ addTransaction }) {
   return (
     <div className="border bg-white rounded-2 p-3">
       <form className="row g-3" onSubmit={handleSubmitForm}>
-        <div className="col-12">
-          <input
-            type="radio"
-            className="btn-check"
-            name="type"
-            id="cbx-expense"
-            value="Expense"
-            defaultChecked
-            onChange={handleChangeType}
-          />
-          <label className="btn btn-outline-danger rounded-0 rounded-start" htmlFor="cbx-expense">
-            Expense
-          </label>
-          <input
-            type="radio"
-            className="btn-check"
-            name="type"
-            id="cbx-income"
-            value="Income"
-            onChange={handleChangeType}
-          />
-          <label className="btn btn-outline-success rounded-0 rounded-end" htmlFor="cbx-income">
-            Income
-          </label>
+        <div className="col-12 d-flex justify-content-between">
+          <div>
+            <input
+              type="radio"
+              className="btn-check"
+              name="type"
+              id="cbx-expense"
+              value="Expense"
+              defaultChecked
+              onChange={handleChangeType}
+            />
+            <label className="btn btn-outline-danger rounded-0 rounded-start" htmlFor="cbx-expense">
+              Expense
+            </label>
+            <input
+              type="radio"
+              className="btn-check"
+              name="type"
+              id="cbx-income"
+              value="Income"
+              onChange={handleChangeType}
+            />
+            <label className="btn btn-outline-success rounded-0 rounded-end" htmlFor="cbx-income">
+              Income
+            </label>
+          </div>
+          <button type="button" className="btn-close btn-sm" onClick={closeAddForm}></button>
         </div>
         <div className="col-sm-6">
           <label className="form-label">Payee</label>
