@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { INITIAL_TRANSACTIONS } from './mocks/data';
 import Pagination from './components/Pagination';
 import Searchbar from './components/Searchbar';
@@ -12,6 +12,11 @@ function App() {
   const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
   const [isAdding, setIsAdding] = useState(false);
   const [filter, setFilter] = useState({ text: '', month: '', year: '' });
+  const [pagination, setPagination] = useState({ perPage: 5, currentPage: 1 });
+
+  useEffect(() => {
+    setPagination({ perPage: 5, currentPage: 1 });
+  }, [filter]);
 
   const addTransaction = newTransaction => {
     // setTransactions([newTransaction, ...transactions]);
@@ -49,10 +54,24 @@ function App() {
 
   const filteredTransactions = transactions.filter(
     item =>
-      // item.payee.toLowerCase().includes(filter.text.toLowerCase()) ||
-      // item.category.name.toLowerCase().includes(filter.text.toLowerCase())
-      // item.date.getMonth() === 5
-      item.date.getFullYear() === 2021
+      (item.payee.toLowerCase().includes(filter.text.toLowerCase()) ||
+        item.category.name.toLowerCase().includes(filter.text.toLowerCase())) &&
+      (item.date.getMonth() === +filter.month || filter.month === '') &&
+      (item.date.getFullYear() === +filter.year || filter.year === '')
+  );
+
+  const numPage = Math.ceil(filteredTransactions.length / pagination.perPage) || 1;
+
+  // const shownTransactions = filteredTransactions.slice();
+  // perPage =5 currentPage=1 ====> slice(0,5)
+  // perPage =5 currentPage=2 ====> slice(5,10)
+  // perPage =5 currentPage=3 ====> slice(10,15)
+
+  // perPage = 10 currentPage = 1 ===> slice(0, 10)
+  // perPage = 10 currentPage = 2 ===> slice(10, 20)
+  const shownTransactions = filteredTransactions.slice(
+    (pagination.currentPage - 1) * pagination.perPage,
+    pagination.currentPage * pagination.perPage
   );
 
   return (
@@ -65,9 +84,9 @@ function App() {
         )}
         <Summary transactions={transactions} />
         <Searchbar filter={filter} setFilter={setFilter} />
-        <Pagination />
+        <Pagination pagination={pagination} setPagination={setPagination} numPage={numPage} />
         <Transaction
-          transactions={filteredTransactions}
+          transactions={shownTransactions}
           deleteTransaction={deleteTransaction}
           updateTransaction={updateTransaction}
         />

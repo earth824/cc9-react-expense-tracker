@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { EXPENSES, INCOMES } from '../mocks/data';
+import Input from './UI/Input';
+import Col from './UI/Col';
+import Option from './UI/Option';
 import { isEmpty } from '../services/validateService';
+import Select from './UI/Select';
 
 const validatePayee = value => {
   if (isEmpty(value)) {
@@ -115,9 +119,9 @@ function TransactionForm({ addTransaction, closeAddForm }) {
   const categoryOptions =
     type === 'Expense'
       ? EXPENSES.map(item => (
-          <option key={item.id} value={item.id}>
+          <Option key={item.id} value={item.id}>
             {item.name}
-          </option>
+          </Option>
         ))
       : INCOMES.map(item => (
           <option key={item.id} value={item.id}>
@@ -156,22 +160,16 @@ function TransactionForm({ addTransaction, closeAddForm }) {
           </div>
           <button type="button" className="btn-close btn-sm" onClick={closeAddForm}></button>
         </div>
-        <div className="col-sm-6">
-          <label className="form-label">Payee</label>
-          <input
-            type="text"
-            className={`form-control${error.payee ? ' is-invalid' : ''}`}
-            value={payee}
-            onChange={handleChangePayee}
-          />
-          <div className="invalid-feedback">{error.payee}</div>
-        </div>
-        <div className="col-sm-6">
-          <label className="form-label">Category</label>
-          <select className="form-select" value={category} onChange={e => setCategory(e.target.value)}>
+
+        <Col sm={6}>
+          <Input title="Payee" error={error.payee} value={payee} onChange={handleChangePayee} />
+        </Col>
+
+        <Col sm={6}>
+          <Select title="Category" value={category} onChange={e => setCategory(e.target.value)}>
             {categoryOptions}
-          </select>
-        </div>
+          </Select>
+        </Col>
         <div className="col-sm-6">
           <label className="form-label">Amount</label>
           <input
