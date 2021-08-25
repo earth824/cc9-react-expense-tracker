@@ -2,15 +2,42 @@ import './App.css';
 
 function App() {
   return (
-    <div className="container">
-      <div className="content">
+    <>
+      <nav className="navbar navbar-expand-sm sticky-top navbar-light bg-warning">
+        <div className="container-fluid">
+          <a className="navbar-brand text-black-50 fw-bolder ts-8" href="/">
+            EXPENSE TRACKER
+          </a>
+
+          <div className="navbar-collapse justify-content-end">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link active" href="/">
+                  Home
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/">
+                  New
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div className="container mw-sm py-4">
         <div className="border bg-white rounded-2 p-3">
           <form className="row g-3">
             <div className="col-12">
-              <input type="radio" className="btn-check" />
-              <label className="btn btn-danger rounded-0 rounded-start">Expense</label>
-              <input type="radio" className="btn-check" />
-              <label className="btn btn-outline-success rounded-0 rounded-end">Income</label>
+              <input type="radio" className="btn-check" id="cbx-expense" name="type" />
+              <label className="btn btn-outline-danger rounded-0 rounded-start" htmlFor="cbx-expense">
+                Expense
+              </label>
+              <input type="radio" className="btn-check" id="cbx-income" name="type" />
+              <label className="btn btn-outline-success rounded-0 rounded-end" htmlFor="cbx-income">
+                Income
+              </label>
             </div>
             <div className="col-sm-6">
               <label className="form-label">Payee</label>
@@ -35,15 +62,17 @@ function App() {
             </div>
             <div className="col-12">
               <label className="form-label">Comment</label>
-              <input type="text" className="form-control" />
+              <textarea className="form-control" rows="3"></textarea>
             </div>
-            <div className="col-12 mt-4 d-grid">
-              <button className="btn btn-primary">Save</button>
+            <div className="col-12">
+              <div className="d-grid mt-3">
+                <button className="btn btn-primary">Save</button>
+              </div>
             </div>
           </form>
         </div>
 
-        <div className="row mt-4">
+        <div className="row g-3">
           <div className="col-sm-4">
             <div className="bg-info rounded-2 p-3">
               <p className="text-black-50">Net Worth</p>
@@ -64,39 +93,50 @@ function App() {
           </div>
         </div>
 
-        <div className="row g-3 mt-3">
-          <div className="col-sm-6">
-            <input type="text" className="form-control" placeholder="Enter to search" />
-          </div>
-          <div className="col-sm-3">
-            <select className="form-select">
-              <option value="">Filter Month</option>
-              <option value="">Jan</option>
-              <option value="">Feb</option>
-              <option value="">Mar</option>
-              <option value="">Apr</option>
-              <option value="">May</option>
-              <option value="">Jun</option>
-              <option value="">Jul</option>
-              <option value="">Aug</option>
-              <option value="">Sep</option>
-              <option value="">Oct</option>
-              <option value="">Nov</option>
-              <option value="">Dec</option>
-            </select>
-          </div>
-          <div className="col-sm-3">
-            <select className="form-select">
-              <option value="">Filter Year</option>
-              <option value="">2021</option>
-              <option value="">2020</option>
-            </select>
+        <div className="mt-4">
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <div className="input-group">
+                <input type="text" className="form-control form-control-sm" placeholder="Enter to search" />
+                <button className="btn btn-sm btn-outline-light">x</button>
+              </div>
+            </div>
+            <div className="col-sm-3">
+              <div className="input-group">
+                <select className="form-select form-select-sm">
+                  <option value="">Month</option>
+                  <option value="">Jan</option>
+                  <option value="">Feb</option>
+                  <option value="">Mar</option>
+                  <option value="">Apr</option>
+                  <option value="">May</option>
+                  <option value="">Jun</option>
+                  <option value="">Jul</option>
+                  <option value="">Aug</option>
+                  <option value="">Sep</option>
+                  <option value="">Oct</option>
+                  <option value="">Nov</option>
+                  <option value="">Dec</option>
+                </select>
+                <button className="btn btn-sm btn-outline-light">x</button>
+              </div>
+            </div>
+            <div className="col-sm-3">
+              <div className="input-group">
+                <select className="form-select form-select-sm">
+                  <option value="">Year</option>
+                  <option value="">2021</option>
+                  <option value="">2020</option>
+                </select>
+                <button className="btn btn-sm btn-outline-light">x</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-4 d-flex justify-content-between">
-          <div className="row">
-            <div className="col-12">
+        <div className="mt-3 d-flex justify-content-between">
+          <div className="d-flex align-items-center mb-3">
+            <div>
               <select type="text" className="form-select form-select-sm">
                 <option value="">10</option>
                 <option value="">25</option>
@@ -104,6 +144,7 @@ function App() {
                 <option value="">100</option>
               </select>
             </div>
+            <span className="text-white-50 mx-2 fs-7">Showing 1 to 10 of 20 transactions</span>
           </div>
           <nav>
             <ul className="pagination pagination-sm">
@@ -158,7 +199,7 @@ function App() {
           <li className="list-group-item d-flex justify-content-between align-items-center bd-callout bd-callout-success">
             <div className="transaction-detail d-flex flex-fill me-4">
               <div className="transaction-date-card border border-1 border-dark rounded-2 bg-warning p-2 text-center">
-                <p className="p-0 m-0 fs-7 text-black-50">Dec 30</p>
+                <p className="p-0 m-0 fs-7 text-black-50">Dec 21</p>
                 <p className="p-0 m-0">30</p>
               </div>
               <div className="d-flex justify-content-between align-items-center flex-fill ps-4">
@@ -193,7 +234,7 @@ function App() {
           </li>
         </ul>
       </div>
-    </div>
+    </>
   );
 }
 
