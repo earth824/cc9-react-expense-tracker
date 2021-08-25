@@ -2,7 +2,7 @@ import './App.css';
 
 function App() {
   return (
-    <>
+    <div className="d-flex flex-column min-vh-100">
       <nav className="navbar navbar-expand-sm sticky-top navbar-light bg-warning">
         <div className="container-fluid">
           <a className="navbar-brand text-black-50 fw-bolder ts-8" href="/">
@@ -26,7 +26,7 @@ function App() {
         </div>
       </nav>
 
-      <div className="container mw-sm py-4">
+      <div className="container mw-sm py-4 flex-grow-1">
         <div className="border bg-white rounded-2 p-3">
           <form className="row g-3">
             <div className="col-12">
@@ -234,7 +234,10 @@ function App() {
           </li>
         </ul>
       </div>
-    </>
+      <footer className="text-white-50 text-center py-3 fs-7">
+        Copyright © 2021 Flyinggiraffe. All rights reserved.
+      </footer>
+    </div>
   );
 }
 
