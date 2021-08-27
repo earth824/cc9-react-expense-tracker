@@ -1,9 +1,6 @@
-import { useContext } from 'react';
-import { TransactionContext } from '../../contexts/transactionContext';
 import TransactionCard from './TransactionCard';
 
-function TransactionContainer() {
-  const { transactions } = useContext(TransactionContext); // { transactions: [...], setTransactions: fn() }
+function TransactionContainer({ transactions }) {
   return (
     <ul className="list-group">
       {transactions.map(item => (

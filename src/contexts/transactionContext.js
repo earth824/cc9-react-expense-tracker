@@ -10,7 +10,7 @@ function TransactionProvider({ children }) {
     const fetchTransaction = async () => {
       try {
         const res = await axios.get('http://localhost:8080/transactions');
-        setTransactions(res.data.transactions);
+        setTransactions(res.data.transactions.map(item => ({ ...item, date: new Date(item.date) })));
       } catch (err) {
         console.log(err);
       }

@@ -12,8 +12,9 @@ function SummaryContainer() {
     return sum;
   }, 0);
 
-  // const expense = transactions.reduce((sum, { amount, category: { type } }) =>
-  //   type === 'EXPENSE' ? sum + amount : sum
+  // const expense = transactions.reduce(
+  //   (sum, { amount, category: { type } }) => (type === 'EXPENSE' ? sum + amount : sum),
+  //   0
   // );
 
   const income = transactions.reduce((sum, item) => {
