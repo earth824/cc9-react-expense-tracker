@@ -24,7 +24,7 @@ function Home() {
 
   return (
     <>
-      <SummaryContainer />
+      <SummaryContainer transactions={filterdTransactions} />
       <FilterContainer />
       <PaginationContainer length={filterdTransactions.length} />
       <TransactionContainer transactions={filterdTransactions} />

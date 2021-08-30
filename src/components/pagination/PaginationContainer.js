@@ -10,6 +10,10 @@ function PaginationContainer({ length }) {
   for (let i = 1; i <= numPage; i++) {
     result.push(i);
   }
+
+  if (length === 0) {
+    result.push(1);
+  }
   // [1, 2, 3, 4, ...]
 
   // const createPageList = () => {
@@ -45,6 +49,23 @@ function PaginationContainer({ length }) {
     }
   };
 
+  // case: length = 0
+  // currentPage: 1, perPage: 10, length: 0 => Showing 0 to 0 of 0
+  // case: length > 0
+  // currentPage: 1, perPage: 10 => Showing 1 to 10 of 34
+  // currentPage: 2, perPage: 10 => Showing 11 to 20 of 34
+  // currentPage: 3, perPage: 10 => Showing 21 to 30 of 34
+  // currentPage: 4, perPage: 10 => Showing 31 to 34 of 34
+  // currentPage: n, perPage: m => Showing (n-1) * m + 1 to n * m > length ? length : n * m of lentgh
+
+  // let pagingMessage = 'Showing 0 to 0 of 0 transactions';
+
+  // if (length > 0) {
+  //   pagingMessage = `Showing ${(currentPage - 1) * perPage + 1} to ${
+  //     currentPage * perPage > length ? length : currentPage * perPage
+  //   } of ${length} transactions`;
+  // }
+
   return (
     <div className="mt-3 d-flex justify-content-between">
       <div className="d-flex align-items-center mb-3">
@@ -53,7 +74,10 @@ function PaginationContainer({ length }) {
             type="text"
             className="form-select form-select-sm"
             value={perPage}
-            onChange={e => setPerPage(+e.target.value)}
+            onChange={e => {
+              setPerPage(+e.target.value);
+              setCurrentPage(1);
+            }}
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -61,7 +85,14 @@ function PaginationContainer({ length }) {
             <option value="100">100</option>
           </select>
         </div>
-        <span className="text-white-50 mx-2 fs-7">Showing 1 to 10 of {length} transactions</span>
+        {/* <span className="text-white-50 mx-2 fs-7">{pagingMessage}</span> */}
+        <span className="text-white-50 mx-2 fs-7">
+          {length > 0
+            ? `Showing ${(currentPage - 1) * perPage + 1} to ${
+                currentPage * perPage > length ? length : currentPage * perPage
+              } of ${length} transactions`
+            : 'Showing 0 to 0 of 0 transactions'}
+        </span>
       </div>
       <nav>
         <ul className="pagination pagination-sm">

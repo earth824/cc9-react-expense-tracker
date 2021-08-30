@@ -1,9 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { PaginationContext } from '../../contexts/paginationContext';
 import { SearchContext } from '../../contexts/searchContext';
 
 function FilterContainer() {
   const { searchText, setSearchText, searchMonth, setSearchMonth, searchYear, setSearchYear } =
     useContext(SearchContext);
+  const { setCurrentPage } = useContext(PaginationContext);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText, searchMonth, searchYear, setCurrentPage]);
 
   return (
     <div className="mt-4">
@@ -15,9 +21,18 @@ function FilterContainer() {
               className="form-control form-control-sm"
               placeholder="Enter to search"
               value={searchText}
-              onChange={e => setSearchText(e.target.value)}
+              onChange={e => {
+                setSearchText(e.target.value);
+                // setCurrentPage(1);
+              }}
             />
-            <button className="btn btn-sm btn-outline-light" onClick={() => setSearchText('')}>
+            <button
+              className="btn btn-sm btn-outline-light"
+              onClick={() => {
+                setSearchText('');
+                // setCurrentPage(1);
+              }}
+            >
               x
             </button>
           </div>
@@ -27,7 +42,10 @@ function FilterContainer() {
             <select
               className="form-select form-select-sm"
               value={searchMonth}
-              onChange={e => setSearchMonth(e.target.value === '' ? '' : +e.target.value)}
+              onChange={e => {
+                setSearchMonth(e.target.value === '' ? '' : +e.target.value);
+                // setCurrentPage(1);
+              }}
               // onChange={e => setSearchMonth(e.target.value && +e.target.value)}
             >
               <option value="">Month</option>
@@ -44,7 +62,13 @@ function FilterContainer() {
               <option value="10">Nov</option>
               <option value="11">Dec</option>
             </select>
-            <button className="btn btn-sm btn-outline-light" onClick={() => setSearchMonth('')}>
+            <button
+              className="btn btn-sm btn-outline-light"
+              onClick={() => {
+                setSearchMonth('');
+                // setCurrentPage(1);
+              }}
+            >
               x
             </button>
           </div>
@@ -54,13 +78,22 @@ function FilterContainer() {
             <select
               className="form-select form-select-sm"
               value={searchYear}
-              onChange={e => setSearchYear(e.target.value === '' ? '' : +e.target.value)}
+              onChange={e => {
+                setSearchYear(e.target.value === '' ? '' : +e.target.value);
+                // setCurrentPage(1);
+              }}
             >
               <option value="">Year</option>
               <option value="2021">2021</option>
               <option value="2020">2020</option>
             </select>
-            <button className="btn btn-sm btn-outline-light" onClick={() => setSearchYear('')}>
+            <button
+              className="btn btn-sm btn-outline-light"
+              onClick={() => {
+                setSearchYear('');
+                // setCurrentPage(1);
+              }}
+            >
               x
             </button>
           </div>

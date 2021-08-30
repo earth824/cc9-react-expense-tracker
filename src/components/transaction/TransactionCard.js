@@ -1,14 +1,37 @@
+import axios from 'axios';
+import { useContext } from 'react';
+import { TransactionContext } from '../../contexts/transactionContext';
 import { formatThaiCurrency } from '../../services/currency';
 import { formatShortMonthShortYear } from '../../services/date';
 
 function TransactionCard({
   transaction: {
+    id,
     payee,
     amount,
     date,
     category: { name, type }
   }
 }) {
+  const { transactions, setTransactions } = useContext(TransactionContext);
+
+  const handleClickDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/transactions/${id}`);
+      // const res = await axios.get('http://localhost:8080/transactions');
+      // setTransactions(res.data.transactions.map(item => ({ ...item, date: new Date(item.date) })));
+
+      const idx = transactions.findIndex(item => item.id === id);
+      if (idx !== -1) {
+        const newTransactions = [...transactions];
+        newTransactions.splice(idx, 1);
+        setTransactions(newTransactions);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const color = type === 'EXPENSE' ? 'danger' : 'success';
 
   return (
@@ -26,7 +49,7 @@ function TransactionCard({
           <span className={`badge bg-${color}`}>{formatThaiCurrency(amount)}</span>
         </div>
       </div>
-      <button className="btn btn-link text-secondary p-0 border-0">
+      <button className="btn btn-link text-secondary p-0 border-0" onClick={handleClickDelete}>
         <i className="bi-x-circle" />
       </button>
     </li>

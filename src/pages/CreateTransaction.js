@@ -1,48 +1,111 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import TextInput from '../components/ui/TextInput';
+import Select from '../components/ui/Select';
+import Option from '../components/ui/Option';
+import TextArea from '../components/ui/TextArea';
+import RadioButton from '../components/ui/RadioButton';
+import Col from '../components/ui/Col';
+import Form from '../components/ui/Form';
+
 function CreateTransaction() {
+  const [input, setInput] = useState({
+    type: 'EXPENSE',
+    payee: '',
+    categoryId: '',
+    amount: '',
+    date: '',
+    comment: ''
+  });
+  const [optionExpenses, setOptionExpenses] = useState([]);
+  const [optionIncomes, setOptionIncomes] = useState([]);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const res = await axios.get('http://localhost:8080/categories');
+        setOptionExpenses(res.data.categories.filter(item => item.type === 'EXPENSE'));
+        setOptionIncomes(res.data.categories.filter(item => item.type === 'INCOME'));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCategory();
+  }, []);
+
+  // const handleChangePayee = e => {
+  //   setInput({ ...input, payee: e.target.value });
+  // };
+
+  // const handleChangeAmount = e => {
+  //   setInput({ ...input, amount: e.target.value });
+  // };
+
+  const handleChangeInput = e => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const { type, payee, categoryId, amount, date, comment } = input;
+
+  const shownOptions = type === 'EXPENSE' ? [...optionExpenses] : [...optionIncomes];
+
   return (
     <div className="border bg-white rounded-2 p-3">
-      <form className="row g-3">
-        <div className="col-12">
-          <input type="radio" className="btn-check" id="cbx-expense" name="type" />
-          <label className="btn btn-outline-danger rounded-0 rounded-start" htmlFor="cbx-expense">
+      <Form className="row g-3">
+        <Col>
+          <RadioButton
+            id="cbx-expense"
+            name="type"
+            color="danger"
+            radius="start"
+            value="EXPENSE"
+            onChange={handleChangeInput}
+            defaultChecked={type === 'EXPENSE'}
+          >
             Expense
-          </label>
-          <input type="radio" className="btn-check" id="cbx-income" name="type" />
-          <label className="btn btn-outline-success rounded-0 rounded-end" htmlFor="cbx-income">
+          </RadioButton>
+          <RadioButton
+            id="cbx-income"
+            name="type"
+            color="success"
+            radius="end"
+            value="INCOME"
+            onChange={handleChangeInput}
+            defaultChecked={type === 'INCOME'}
+          >
             Income
-          </label>
-        </div>
-        <div className="col-sm-6">
-          <label className="form-label">Payee</label>
-          <input type="text" className="form-control" />
-        </div>
-        <div className="col-sm-6">
-          <label className="form-label">Category</label>
-          <select className="form-select">
-            <option>Food</option>
-            <option>Shopping</option>
-            <option>Transport</option>
-            <option>Utilities</option>
-          </select>
-        </div>
-        <div className="col-sm-6">
-          <label className="form-label">Amount</label>
-          <input type="text" className="form-control" />
-        </div>
-        <div className="col-sm-6">
-          <label className="form-label">Date</label>
-          <input type="date" className="form-control" />
-        </div>
-        <div className="col-12">
-          <label className="form-label">Comment</label>
-          <textarea className="form-control" rows="3"></textarea>
-        </div>
-        <div className="col-12">
+          </RadioButton>
+        </Col>
+        <Col sm={6}>
+          <TextInput label="Payee" value={payee} onChange={handleChangeInput} name="payee" />
+        </Col>
+        <Col sm={6}>
+          <Select label="Category">
+            {shownOptions.map(item => (
+              <Option key={item.id} value={item.id}>
+                {item.name}
+              </Option>
+            ))}
+            {/* <Option value="Food">Food</Option>
+            <Option value="Shopping">Shopping</Option>
+            <Option value="Transport">Transaport</Option> */}
+          </Select>
+        </Col>
+        <Col sm={6}>
+          <TextInput label="Amount" value={amount} onChange={handleChangeInput} name="amount" />
+        </Col>
+        <Col sm={6}>
+          <TextInput label="Date" type="date" value={date} onChange={handleChangeInput} name="date" />
+        </Col>
+        <Col>
+          <TextArea label="Comment" value={comment} onChange={handleChangeInput} name="comment" />
+        </Col>
+        <Col>
           <div className="d-grid mt-3">
             <button className="btn btn-primary">Save</button>
           </div>
-        </div>
-      </form>
+        </Col>
+      </Form>
     </div>
   );
 }
