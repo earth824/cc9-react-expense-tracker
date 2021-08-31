@@ -42,7 +42,13 @@ function CreateTransaction() {
   // };
 
   const handleChangeInput = e => {
-    setInput({ ...input, [e.target.name]: e.target.value });
+    if (e.target.name === 'type') {
+      setInput(current => ({
+        ...current,
+        categoryId: e.target.value === 'EXPENSE' ? optionExpenses[0].id : optionIncomes[0].id
+      }));
+    }
+    setInput(current => ({ ...current, [e.target.name]: e.target.value }));
   };
 
   const { type, payee, categoryId, amount, date, comment } = input;
@@ -80,7 +86,7 @@ function CreateTransaction() {
           <TextInput label="Payee" value={payee} onChange={handleChangeInput} name="payee" />
         </Col>
         <Col sm={6}>
-          <Select label="Category">
+          <Select label="Category" value={categoryId} onChange={handleChangeInput} name="categoryId">
             {shownOptions.map(item => (
               <Option key={item.id} value={item.id}>
                 {item.name}
