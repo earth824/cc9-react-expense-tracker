@@ -1,25 +1,28 @@
 import { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { TransactionContext } from '../contexts/transactionContext';
+import { validateTransactionField, validateTransactionObject } from '../services/validate';
+import Form from '../components/ui/Form';
+import Col from '../components/ui/Col';
+import RadioButton from '../components/ui/RadioButton';
 import TextInput from '../components/ui/TextInput';
 import Select from '../components/ui/Select';
 import Option from '../components/ui/Option';
 import TextArea from '../components/ui/TextArea';
-import RadioButton from '../components/ui/RadioButton';
-import Col from '../components/ui/Col';
-import Form from '../components/ui/Form';
-import { validateTransactionField, validateTransactionObject } from '../services/validate';
-import { TransactionContext } from '../contexts/transactionContext';
 
-function CreateTransaction(props) {
+function EditTransaction() {
+  const location = useLocation();
+
   const [input, setInput] = useState({
-    type: 'EXPENSE',
-    payee: '',
-    categoryId: '',
-    amount: '',
-    date: '',
-    comment: ''
+    type: location?.state?.transaction?.category?.type || 'EXPENSE',
+    payee: location?.state?.transaction?.payee || '',
+    categoryId: location?.state?.transaction?.category?.id || '',
+    amount: location?.state?.transaction?.amount + '' || '',
+    date: location?.state?.transaction?.date.toISOString().slice(0, 10) || '',
+    comment: location?.state?.transaction?.comment || ''
   });
+
   const [optionExpenses, setOptionExpenses] = useState([]);
   const [optionIncomes, setOptionIncomes] = useState([]);
   const [error, setError] = useState({});
@@ -27,6 +30,7 @@ function CreateTransaction(props) {
   const { transactions, setTransactions } = useContext(TransactionContext);
 
   const history = useHistory();
+  const params = useParams();
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -34,7 +38,6 @@ function CreateTransaction(props) {
         const res = await axios.get('http://localhost:8080/categories');
         const expenses = res.data.categories.filter(item => item.type === 'EXPENSE');
         setOptionExpenses(expenses);
-        setInput(current => ({ ...current, categoryId: expenses[0].id }));
         setOptionIncomes(res.data.categories.filter(item => item.type === 'INCOME'));
       } catch (err) {
         console.log(err);
@@ -43,17 +46,29 @@ function CreateTransaction(props) {
     fetchCategory();
   }, []);
 
-  // const handleChangePayee = e => {
-  //   setInput({ ...input, payee: e.target.value });
-  // };
-
-  // const handleChangeAmount = e => {
-  //   setInput({ ...input, amount: e.target.value });
-  // };
+  useEffect(() => {
+    const fetchTransaction = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/transactions/${params.id}`);
+        const transaction = res.data.transaction;
+        setInput({
+          type: transaction.category.type,
+          payee: transaction.payee,
+          amount: transaction.amount + '',
+          date: transaction.date.slice(0, 10),
+          categoryId: transaction.category.id,
+          comment: transaction.comment
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (!location.state) fetchTransaction();
+  }, []);
 
   const handleChangeInput = e => {
     const validateFields = ['amount', 'payee', 'date'];
-    // if (e.target.name === 'amount' || e.target.name === 'payee' || e.target.name === 'date') {
+
     if (validateFields.includes(e.target.name)) {
       const error = validateTransactionField(e.target.value, e.target.name);
       setError(current => ({ ...current, [e.target.name]: error }));
@@ -73,27 +88,9 @@ function CreateTransaction(props) {
     const error = validateTransactionObject(input);
     setError(error);
 
-    // const keys = Object.keys(error);
-    // let hasError = false;
-    // for (let i = 0; i < keys.length; i++) {
-    //   if (error[keys] !== '') {
-    //     hasError = true;
-    //     break;
-    //   }
-    // }
-    // if (!hasError) {
-    //   // save to api
-    // }
-
-    // error { payee: 'Payee error', amount: 'Amount error' }
-    // Object.keys(error) => ['payee', 'amount']
-    // Object.values(error) => ['Payee error', 'Amount error']
-    // Object.entries(error) => [['payee', 'Payee error'], ['amount', 'Amount error']]
-
     if (Object.keys(error).length === 0) {
-      // save to api
       try {
-        const res = await axios.post('http://localhost:8080/transactions', {
+        const res = await axios.put(`http://localhost:8080/transactions/${params.id}`, {
           payee: input.payee,
           amount: +input.amount,
           date: input.date,
@@ -101,33 +98,14 @@ function CreateTransaction(props) {
           comment: input.comment
         });
 
-        // Method#1 update by calling api
-        // const res1 = await axios.get('http://localhost:8080/transactions');
-        // setTransactions(res1.data.transactions.map(item => ({ ...item, date: new Date(item.date) })));
-
-        // Method#2 update by pure javascript
         const newTransactions = [...transactions];
-        const newItem = res.data.transaction;
-        newTransactions.push({ ...newItem, date: new Date(newItem.date) });
-        newTransactions.sort((a, b) => {
-          if (a.date < b.date) {
-            return 1;
-          }
-          return -1;
-        });
-        // [3, 7, 1].sort((a, b) => { // [1, 7, 3]
-        //   if (a > b) {
-        //     return 1;
-        //   } else {
-        //     return -1
-        //   }
-        // })
-        setTransactions(newTransactions);
+        const idx = newTransactions.findIndex(item => item.id === params.id);
+        if (idx !== -1) {
+          const updateItem = res.data.transaction;
+          newTransactions[idx] = { ...updateItem, date: new Date(updateItem.date) };
+          setTransactions(newTransactions);
+        }
 
-        // Method#1 Redirect using props
-        // props.history.push('/');
-
-        // Method#2 Redirect using history object from useHistory
         history.push('/');
       } catch (err) {
         console.log(err);
@@ -207,4 +185,4 @@ function CreateTransaction(props) {
   );
 }
 
-export default CreateTransaction;
+export default EditTransaction;

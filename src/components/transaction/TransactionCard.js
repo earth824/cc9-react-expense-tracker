@@ -1,19 +1,22 @@
 import axios from 'axios';
 import { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { TransactionContext } from '../../contexts/transactionContext';
 import { formatThaiCurrency } from '../../services/currency';
 import { formatShortMonthShortYear } from '../../services/date';
 
-function TransactionCard({
-  transaction: {
+function TransactionCard({ transaction }) {
+  const {
     id,
     payee,
     amount,
     date,
     category: { name, type }
-  }
-}) {
+  } = transaction;
+
   const { transactions, setTransactions } = useContext(TransactionContext);
+
+  const history = useHistory();
 
   const handleClickDelete = async () => {
     try {
@@ -32,11 +35,16 @@ function TransactionCard({
     }
   };
 
+  const handleClickEdit = () => {
+    // history.push(`/edit-transaction/${id}`);
+    history.push({ pathname: `/edit-transaction/${id}`, state: { transaction: transaction } });
+  };
+
   const color = type === 'EXPENSE' ? 'danger' : 'success';
 
   return (
     <li className={`list-group-item d-flex justify-content-between align-items-center bd-callout bd-callout-${color}`}>
-      <div className="transaction-detail d-flex flex-fill me-4">
+      <div className="transaction-detail d-flex flex-fill me-4" onClick={handleClickEdit}>
         <div className="transaction-date-card border border-1 border-dark rounded-2 bg-warning p-2 text-center">
           <p className="p-0 m-0 fs-7 text-black-50">{formatShortMonthShortYear(date)}</p>
           <p className="p-0 m-0">{date.getDate()}</p>
